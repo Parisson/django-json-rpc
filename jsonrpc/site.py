@@ -7,7 +7,7 @@ from jsonrpc.exceptions import *
 from jsonrpc._types import *
 from django.conf import settings
 from django.core import signals
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 empty_dec = lambda f: f
 try:
     from django.views.decorators.csrf import csrf_exempt
@@ -129,7 +129,7 @@ class JSONRPCSite(object):
         self.json_encoder = json_encoder
 
     def register(self, name, method):
-        self.urls[smart_text(name)] = method
+        self.urls[smart_str(name)] = method
 
     def empty_response(self, version='1.0'):
         resp = {'id': None}
@@ -144,7 +144,7 @@ class JSONRPCSite(object):
     def validate_get(self, request, method):
         encode_get_params = lambda r: dict([(k, v[0] if len(v) == 1 else v) for k, v in r])
         if request.method == 'GET':
-            method = smart_text(method)
+            method = smart_str(method)
             if method in self.urls and getattr(self.urls[method], 'json_safe',
                                                    False):
                 D = {
